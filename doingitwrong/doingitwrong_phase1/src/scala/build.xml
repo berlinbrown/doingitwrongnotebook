@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
+<!-- Copyright (c) 2009 -->
+<!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
+<project name="Build File" default="compile" basedir=".">
+	
+    <property file="build.properties" /> 
+    <property name="build.dir"            value="${basedir}/build" />
+    <property name="build.classes.dir"    value="${basedir}/build/classes" />
+	
+    <property name="src.dir"              value="${basedir}/src"/>
+    <property name="lib.dir"              value="${basedir}/../../lib"/>	
+	
+<target name="help" description="Initialization">
+	        <tstamp/>
+			<echo>
+ Additional Targets and Usage:
+ -----------------
+ compile - to compile the source, use this target.  
+           To build the  complete release package, 
+           you must compile this manually.
+
+</echo>
+	</target>
+	
+    <path id="classpath">    	
+        <pathelement location="${lib.dir}/scala/scala280r3/scala-compiler.jar" />
+        <pathelement location="${lib.dir}/scala/scala280r3/scala-library.jar" />
+    </path>
+
+    <!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
+    <!-- Target: Prepare -->
+    <!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
+    <target name="prepare" depends="help">
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${build.classes.dir}" />    	
+    </target>
+
+    <taskdef resource="scala/tools/ant/antlib.xml">
+            <classpath refid="classpath" />
+    </taskdef>
+	
+    <!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
+    <!-- Target: Compile -->
+    <!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
+	<target name="compile-java" depends="prepare">
+		 <javac deprecation="true"
+		        		verbose="false"
+		        		debug="true"
+		                target="1.5"
+		                srcdir="${src.dir}"
+		                destdir="${build.classes.dir}">
+			<include name="**/*.java" />		        	
+			<classpath refid="classpath"/>            
+		</javac>
+	</target>
+	
+    <target name="compile" depends="prepare, compile-java">
+    	 <scalac srcdir="${src.dir}"
+    	    destdir="${build.classes.dir}"
+    	    classpathref="classpath"
+    	    force="never">
+    	    <include name="**/*.scala"/>
+    	 </scalac>
+    </target>
+	
+	<target name="run" depends="compile">		
+		<java classname="org.berlin.p1.dsl.RunOrderDSL" fork="true">
+			<classpath>
+				<pathelement location="${build.classes.dir}" />				
+				<pathelement location="${lib.dir}/scala/scala280r3/scala-library.jar" />
+			</classpath>	
+		</java>
+	</target>
+	
+	<!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
+	<!-- Main Clean -->
+    <!-- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; -->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+</project>

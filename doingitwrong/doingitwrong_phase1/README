@@ -1,0 +1,8 @@
+Output:
+Print the line items in the DSL.
+
+@ClientOrder - A1234 line-items : { 
+ [#LineItem - s:IBM q:100]
+ [#LineItem - s:Sun q:40]
+ [#LineItem - s:CISCO q:25]
+}

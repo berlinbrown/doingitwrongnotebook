@@ -1,0 +1,8 @@
+compile:
+
+run:
+     [java] @ClientOrder - A1234 line-items : { [#LineItem - s:IBM q:100]}
+
+BUILD SUCCESSFUL
+Total time: 3 seconds
+
